@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Conference</title>
+	<style type="text/css">
+		body { font-family: sans-serif; padding: 20px; }
+
+		#nav {
+			display: inline-block;
+			float: left;
+			overflow-x: auto;
+			margin-right: 10px;
+		}
+		#page {
+			display: inline-block;
+			float: left;
+		}
+
+		.nav_group_header {
+			border-bottom: thin solid grey;
+			font-family: serif;
+			font-weight: bold;
+		}
+		.nav_group {}
+
+		#activeVideo:-webkit-full-screen { width: auto; height: auto; }
+		/*#activeVideo:-moz-full-screen { width: auto; height: auto; }*/
+		.activeVideo { width: 500px; height: 500px; }
+		.thumbnailVideo, .selfVideo { width: 200px; }
+		.selfVideo {}
+	</style>
+	<!--<script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js' defer></script>-->
+	<script type="text/javascript">
+		//aamo4oi3Y3iimTZC
+		//https://aamo4oi3y3iimtzc.firebaseio.com
+
+		/*var myDataRef = new Firebase('https://gke9d5dprpq.firebaseio-demo.com/');
+		var name = "name", text = "text";
+		// set primitive type
+		myDataRef.set('User ' + name + ' says ' + text);
+		// set object type; separate children of myDataRef
+		myDataRef.set({name: name, text: text});
+		// push object onto the list at myDataRef
+		myDataRef.push({name: name, text: text});
+		myDataRef.on(
+				'child_added', // event type
+				function(snapshot) { // callback
+					var message = snapshot.val();
+					displayChatMessage(message.name, message.text);
+		});*/
+
+	</script>
+</head>
+<body>
+
+<div id="nav">
+	<div class="nav_group_header">
+		Rooms:
+	</div>
+	<ul class="nav_group">
+		<li>One</li>
+		<li>Two</li>
+		<li>Three</li>
+	</ul>
+	<div class="nav_group_header">
+		Peers:
+	</div>
+	<ul class="nav_group">
+		<li>Mr. T</li>
+		<li>Ralph Macchio</li>
+		<li>Vanilla Ice</li>
+	</ul>
+</div>
+
+<div id="page">
+	<div>
+		<img id="activeVideo" src="images/mr_t.jpg" alt="Video of your peer" class="activeVideo"/>
+		<video id="selfVideo" class="selfVideo thumbnailVideo" autoplay muted></video>
+	</div>
+	<hr/>
+	<div id="peers">
+		<img src="images/mr_t.jpg" alt="Mr. T" class="thumbnailVideo"/>
+		<img src="images/ralph_macchio.jpg" alt="Sloth" class="thumbnailVideo"/>
+		<img src="images/vanilla_ice.jpg" alt="Vanilla Ice" class="thumbnailVideo"/>
+	</div>
+</div>
+
+<script src='adapter.js' type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript">
+	getUserMedia(
+			{
+				audio:false,
+				video:true
+			},
+			function(stream) {
+				attachMediaStream(selfVideo, stream);
+			},
+			function(error) {
+				console.error(error);
+			}
+	);
+
+	activeVideo.addEventListener(
+			"dblclick",
+			function(event) {
+				startFullscreen(this);
+			},
+			false
+	);
+
+	var peerThumbs = peers.querySelectorAll("img");
+	for(var i = 0 ; i < peerThumbs.length ; i++) {
+		var peer = peerThumbs[i];
+		peer.addEventListener(
+				"click",
+				function(event) {
+					activeVideo.src = this.src;
+				},
+				false
+		);
+	}
+</script>
+
+</body>
+</html>
