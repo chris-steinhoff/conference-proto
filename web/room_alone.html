@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Conference</title>
+	<style type="text/css">
+		body { font-family: sans-serif; padding: 20px; }
+
+		#nav {
+			display: inline-block;
+			float: left;
+			overflow-x: auto;
+			margin-right: 10px;
+		}
+		#page {
+			display: inline-block;
+			float: left;
+		}
+
+		.nav_group_header {
+			border-bottom: thin solid grey;
+			font-family: serif;
+			font-weight: bold;
+		}
+		.nav_group {}
+
+		#activeVideo:-webkit-full-screen { width: auto; height: auto; }
+		/*#activeVideo:-moz-full-screen { width: auto; height: auto; }*/
+		.activeVideo { width: 500px; /*height: 500px;*/ }
+		.thumbnailVideo, .selfVideo { width: 200px; }
+		.selfVideo {}
+	</style>
+</head>
+<body>
+
+<div id="nav">
+	<div class="nav_group_header">
+		Rooms:
+	</div>
+	<ul class="nav_group">
+		<li>One</li>
+		<li>Two</li>
+		<li>Three</li>
+	</ul>
+	<div class="nav_group_header">
+		Peers:
+	</div>
+	<ul class="nav_group">
+		<li>Mr. T</li>
+		<li>Ralph Macchio</li>
+		<li>Vanilla Ice</li>
+	</ul>
+</div>
+
+<div id="page">
+	<div>
+		<video id="activeVideo" class="activeVideo" autoplay muted></video>
+	</div>
+</div>
+
+<script src='adapter.js' type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript">
+    var activeVideo = document.getElementById("activeVideo");
+
+	getUserMedia(
+			{
+				audio:false,
+				video:true
+			},
+			function(stream) {
+				attachMediaStream(activeVideo, stream);
+			},
+			function(error) {
+				console.error(error);
+			}
+	);
+
+    activeVideo.addEventListener(
+			"dblclick",
+			function(event) {
+				startFullscreen(this);
+			},
+			false
+	);
+</script>
+
+</body>
+</html>
