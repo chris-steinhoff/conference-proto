@@ -1,0 +1,11 @@
+Functionality
+. Create/Destroy a room
+. Join/Leave a room
+. Change stream-config
+.. Share/Unshare video, audio, and screen
+
+Protocol Operations
+. Listen for added members
+. Listen for removed members
+. Listen for members' stream-config changes
+. Add a stream to a connection (update stream-config)
