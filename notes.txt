@@ -9,3 +9,112 @@ Protocol Operations
 . Listen for removed members
 . Listen for members' stream-config changes
 . Add a stream to a connection (update stream-config)
+
+DB
+
+. peers/
+
+. . bob_id/
+. . . name: Bob
+
+. . alice_id/
+. . . name: Alice
+
+. . larry_id/
+. . . name: John
+
+. . kathy_id/
+. . . name: Kathy
+
+. rooms/  (app-core listens here to manage room-list)
+
+. . first_id/
+. . . name: First Room (private)
+. . . secured: true
+
+. . second_id/
+. . . name: Second Room (public)
+. . . secured: false
+
+. occupants/
+
+. . first_id/  (app-room listens here to manage occupant-list)
+. . . bob_id: true
+. . . alice_id: true
+. . . larry_id: true
+
+. offers/
+
+. . first_id/
+. . . bob_id/  (bob listens(added) here to answer connections)
+. . . . alice_id: {sdp}  (alice set this)
+. . . . larry_id: {sdp}  (larry set this)
+. . . alice_id/
+. . . . bob_id: {sdp}
+. . . . larry_id: {sdp}
+. . . larry_id/
+. . . . bob_id: {sdp}
+. . . . alice_id: {sdp}
+
+. . second_id/
+. . . kathy_id: {sdp}
+
+. answers/
+
+. . first_id/
+. . . bob_id/  (bob listens(added,changed) here to manage connections)
+. . . . alice_id: {sdp}
+. . . . larry_id: {sdp}
+
+. . . alice_id/
+. . . . bob_id: {sdp}
+. . . . larry_id: {sdp}
+
+. . . larry_id/
+. . . . bob_id: {sdp}
+. . . . alice_id: {sdp}
+
+. . second_id/
+. . . kathy_id/
+
+Join Room, first_id, as bob
+. (/answers/first_id).update({bob_id: {}});
+. (/offers/first_id).update({bob_id: {}});
+. (/occupants/first_id).update({bob_id: true});
+. (/occupants/first_id).on("child_added", onOccupantArrival);
+//. (/occupants/first_id).on("child_removed", onOccupantDeparture);
+. (/offers/first_id/bob_id).on("child_added", onOffer);
+. (/offers/first_id/bob_id).on("child_changed", onOfferChanged); // maybe the same as on Offer
+. (/answers/first_id/bob_id).on("child_added", onAnswer);
+. (/answers/first_id/bob_id).on("child_changed", onAnswerChanged); // maybe the same as on Answer
+
+. onOccupantArrival, larry_id, as bob
+. . (/offers/first_id/larry_id).update({bob_id: sdp});
+
+//. onOccupantDeparture, larry_id, as bob
+//. . (/offers/first_id/bob_id/larry_id).remove();
+//. . (/answers/first_id/bob_id/larry_id).remove();
+
+. onOffer from alice as bob_id
+. . (/answers/first_id/alice_id/).update({bob_id: sdp});
+
+. onAnswer from alice as bob_id
+. . display streams
+
+//. (/answers/first_id/bob_id).on("child_added", onAnswer); // open connection and display peer-streams
+//. (/answers/first_id/bob_id).on("child_changed", onAnswerChanged); // update connection and display
+//. (/answers/first_id/bob_id).on("child_removed", onAnswerRemoved); // close connection and remove display
+
+Join Room, first_id, as alice
+. (/offers/first_id).update({alice_id: sdp});
+. (/offers/first_id).forEach(onOffer); // push answer into /answers/first_id/bob_id
+. (/answers/first_id).update({alice_id: {}});
+. (/answers/first_id/alice_id).on(); // same listening pattern as bob;
+
+Leave Room, first_id, as bob
+. (/offers/first_id/bob_id).remove();
+
+Loss of connectivity as bob
+. (/occupants/first_id/bob_id).onDisconnect().remove();
+. (/offers/first_id/bob_id).onDisconnect().remove();
+. (/answers/first_id/bob_id).onDisconnect().remove();
