@@ -15,6 +15,7 @@ DB
 . peers/
 
 . . bob_id/
+. . . id: bob_id
 . . . name: Bob
 
 . . alice_id/
@@ -47,7 +48,9 @@ DB
 
 . . first_id/
 . . . bob_id/  (bob listens(added) here to answer connections)
-. . . . alice_id: {sdp}  (alice set this)
+. . . . alice_id/  (alice set this)
+. . . . . id: alice_id
+. . . . . rtcSessionDescription: {sdp}
 . . . . larry_id: {sdp}  (larry set this)
 . . . alice_id/
 . . . . bob_id: {sdp}
@@ -63,7 +66,9 @@ DB
 
 . . first_id/
 . . . bob_id/  (bob listens(added,changed) here to manage connections)
-. . . . alice_id: {sdp}
+. . . . alice_id/  (alice set this)
+. . . . . id: alice_id
+. . . . . rtcSessionDescription: {sdp}
 . . . . larry_id: {sdp}
 
 . . . alice_id/
@@ -76,6 +81,20 @@ DB
 
 . . second_id/
 . . . kathy_id/
+
+. ice_candidates/
+
+. . first_id/
+. . . bob_id/
+. . . . id: bob_id
+. . . . iceCandidates/
+. . . . . auto_id: {ice}
+. . . . . auto_id: {ice}
+. . . alice_id/
+. . . . id: alice_id
+. . . . iceCandidates/
+. . . . . auto_id: {ice}
+. . . . . auto_id: {ice}
 
 Join Room, first_id, as bob
 . (/answers/first_id).update({bob_id: {}});

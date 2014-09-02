@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+<form id="form">
+  <input id="input" type="text">
+</form>
+<span id="output"></span>
+
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script>
+	form.addEventListener("submit", doHash, false);
+	function doHash(event) {
+		event.stopPropagation();
+		event.preventDefault();
+		var hash = CryptoJS.MD5(input.value);
+		var base32 = hash.toString(CryptoJS.enc.Base32);
+		output.innerHTML = base32;
+	}
+</script>
+</body>
+</html>

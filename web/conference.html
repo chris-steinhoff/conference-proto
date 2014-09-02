@@ -22,27 +22,38 @@
 			font-weight: bold;
 		}
 		.nav_group {}
+		.nav_room {
+			cursor: pointer;
+		}
+		.nav_peer {}
 
 		#activeVideo:-webkit-full-screen { width: auto; height: auto; }
 			/*#activeVideo:-moz-full-screen { width: auto; height: auto; }*/
-		.activeVideo { width: 500px; height: 500px; }
+		.activeVideo { width: 500px; height: 500px; display: none; }
 		.thumbnailVideo, .selfVideo { width: 200px; }
 		.selfVideo {}
 	</style>
 </head>
 <body>
 
+<div id="auth">
+	<span>2fc1c0beb992cd7096975cfebf9d5c3b</span><br/>
+	<span>64489c85dc2fe0787b85cd87214b3810</span><br/>
+	<input id="idInput" type="text" placeholder="Enter your ID" value="2fc1c0beb992cd7096975cfebf9d5c3b"/>
+	<button id="loginButton" type="button">Login</button>
+</div>
+
 <div id="nav">
 	<div class="nav_group_header">
 		Rooms:
 	</div>
-	<ul class="nav_group">
+	<ul id="nav_rooms" class="nav_group">
 	</ul>
 
 	<div class="nav_group_header">
 		Peers:
 	</div>
-	<ul class="nav_group">
+	<ul id="nav_peers" class="nav_group">
 	</ul>
 </div>
 
@@ -53,9 +64,9 @@
 	</div>
 	<hr/>
 	<div id="peers">
-		<img src="images/mr_t.jpg" alt="Mr. T" class="thumbnailVideo"/>
+		<!--<img src="images/mr_t.jpg" alt="Mr. T" class="thumbnailVideo"/>
 		<img src="images/ralph_macchio.jpg" alt="Sloth" class="thumbnailVideo"/>
-		<img src="images/vanilla_ice.jpg" alt="Vanilla Ice" class="thumbnailVideo"/>
+		<img src="images/vanilla_ice.jpg" alt="Vanilla Ice" class="thumbnailVideo"/>-->
 	</div>
 	<div id="testing">
 		<button id="testButton" type="button">Test</button>
@@ -63,20 +74,165 @@
 </div>
 
 <script src="https://cdn.firebase.com/js/client/1.0.21/firebase.js" type="text/javascript" charset="UTF-8"></script>
+<script src="adapter.js" type="text/javascript" charset="UTF-8"></script>
 <script src="conference.js" type="text/javascript" charset="UTF-8"></script>
 <script src="scripts/firebase_signal_channel.js" type="text/javascript" charset="UTF-8"></script>
 <script type="text/javascript">
+	var conference = null;
+	var channel = new FirebaseSignalChannel("https://aamo4oi3y3iimtzc.firebaseio.com/");
+	/** @type {Object.<string,Room>} */
+	var rooms = {};
+
+	/** @class */
+	/*function MyPeerListener() {
+		if(!this) {
+			return new MyPeerListener();
+		}
+		PeerListener.call(this);
+	}
+	MyPeerListener.prototype = Object.create(PeerListener.prototype, {
+		constructor: {
+			value: MyPeerListener
+		},
+		peerTmpl: {
+			configurable: false,
+			enumerable: false,
+			value: '<li data-id="{{peerId}}" class="nav_peer">{{peerName}}</li>',
+			writable: false
+		}
+	});
+	MyPeerListener.prototype.onPeerAvailable = function(peer) {
+		console.log(peer);
+		var liStr = MyPeerListener.prototype.peerTmpl
+				.replace("{{peerId}}", peer.getId())
+				.replace("{{peerName}}", peer.getName());
+		var ul = document.createElement("ul");
+		ul.innerHTML = liStr;
+		nav_peers.appendChild(ul.firstChild);
+	};
+
+	*//** @class *//*
+	function MyRoomListener() {
+		if(!this) {
+			return new MyRoomListener();
+		}
+		RoomListener.call(this);
+	}
+	MyRoomListener.prototype = Object.create(RoomListener.prototype, {
+		constructor: {
+			value: MyRoomListener
+		},
+		roomTmpl: {
+			configurable: false,
+			enumerable: false,
+			value: '<li data-id="{{roomId}}" class="nav_room">{{roomName}}</li>',
+			writable: false
+		}
+	});
+	MyRoomListener.prototype.onRoomCreated = function(room) {
+		console.log(room);
+		rooms[room.id] = room;
+		var liStr = MyRoomListener.prototype.roomTmpl
+				.replace("{{roomId}}", room.id)
+				.replace("{{roomName}}", room.name);
+		var ul = document.createElement("ul");
+		ul.innerHTML = liStr;
+		var li = ul.firstChild;
+		li.addEventListener("click", roomClick, false);
+		nav_rooms.appendChild(li);
+	};*/
+
+	function roomClick(event) {
+		var li = event.target;
+		var id = li.dataset.id;
+		var room = rooms[id];
+		console.log(room);
+		conference.enterRoom(id);
+	}
+
+	/**
+	 * @class
+	 * @extends Gui
+	 */
+	function MyGui() {
+		if(!this) {
+			return new MyGui();
+		}
+		Gui.call(this);
+	}
+	MyGui.prototype = Object.create(Gui.prototype, {
+		constructor: {
+			value: MyGui
+		},
+		peerTmpl: {
+			configurable: false,
+			enumerable: false,
+			value: '<li data-id="{{peerId}}" class="nav_peer">{{peerName}}</li>',
+			writable: false
+		},
+		roomTmpl: {
+			configurable: false,
+			enumerable: false,
+			value: '<li data-id="{{roomId}}" class="nav_room">{{roomName}}</li>',
+			writable: false
+		}
+	});
+	MyGui.prototype.addPeerToList = function(peer) {
+		console.log(peer);
+		var liStr = MyGui.prototype.peerTmpl
+				.replace("{{peerId}}", peer.getId())
+				.replace("{{peerName}}", peer.getName());
+		var ul = document.createElement("ul");
+		ul.innerHTML = liStr;
+		nav_peers.appendChild(ul.firstChild);
+	};
+	MyGui.prototype.addRoomToList = function(room) {
+		console.log(room);
+		rooms[room.id] = room;
+		var liStr = MyGui.prototype.roomTmpl
+				.replace("{{roomId}}", room.id)
+				.replace("{{roomName}}", room.name);
+		var ul = document.createElement("ul");
+		ul.innerHTML = liStr;
+		var li = ul.firstChild;
+		li.addEventListener("click", roomClick, false);
+		nav_rooms.appendChild(li);
+	};
+	MyGui.prototype.getLocalMedia = function(listener) {
+		if(!listener || !listener.onUserMedia || !listener.onError) {
+			return;
+		}
+		getUserMedia(
+				{
+					"audio": true,
+					"video": true
+				},
+				listener.onUserMedia,
+				listener.onError
+				/*function(stream) {
+					attachMediaStream(videoMe, stream);
+				},
+				error*/
+		);
+	};
+	MyGui.prototype.displayLocalMedia = function(media) {
+		attachMediaStream(selfVideo, media);
+	};
+
+	//var gui = new MyGui();
+	//var conference = new Conference(channel, gui);
+
+	loginButton.addEventListener("click", function() {
+		channel.fetchPeer(idInput.value, function(peer) {
+			var gui = new MyGui();
+			conference = new Conference(channel, gui, peer);
+		});
+	});
+
 	testButton.addEventListener("click", function(event) {
 		event.preventDefault();
-		var channel = new FirebaseSignalChannel("https://aamo4oi3y3iimtzc.firebaseio.com/");
-		channel.setPeerListener({
-			onPeerAvailable: function(peer) {
-				console.log(peer);
-			},
-			onPeerUnavailable: function(peer) {
-				console.log(peer);
-			}
-		});
+//		channel.setPeerListener(new MyPeerListener());
+//		channel.setRoomListener(new MyRoomListener());
 	});
 </script>
 
