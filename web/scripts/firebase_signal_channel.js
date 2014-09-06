@@ -51,6 +51,7 @@ FirebaseSignalChannel.prototype.enterRoom = function(roomId, selfPeerId) {
 	var occupant = {};
 	occupant[selfPeerId] = selfPeerId;
 	this.rootRef.child("occupants").child(roomId).update(occupant);
+	this.rootRef.child("occupants").child(roomId).child(selfPeerId).onDisconnect().remove();
 };
 
 /*

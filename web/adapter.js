@@ -16,6 +16,41 @@ function trace(text) {
   console.log((performance.now() / 1000).toFixed(3) + ": " + text);
 }
 
+window.Log = {
+	/**
+	 * @param {string} method Method definition.
+	 * @param {Object|Array} [args] Arguments to the method.
+	 */
+	enter: function(method, args) {
+		"use strict";
+		console.log((performance.now() / 1000).toFixed(3) + ": " + method);
+		if(args instanceof Object) {
+			for(var arg in args) { if(args.hasOwnProperty(arg)) {
+				console.log(arg + " = " + JSON.stringify(args[arg]));
+			}}
+		}
+		else if(args instanceof Array) {
+			for(var i = 0 ; i < args.length ; i++) {
+				console.log(args[i]);
+			}
+		}
+	},
+	info: function(msg) {
+		"use strict";
+		trace(msg);
+	}
+};
+/**
+ * @param {string} msg Message
+ * @param {Object} [args] Arguments to the method
+ */
+function debug(msg, args) {
+	"use strict";
+	// debug("Class.method(arg1)", {arg1:Object});
+	var regex = /%\w/g;
+	console.log((performance.now() / 1000).toFixed(3) + ": " + text);
+}
+
 if (navigator.mozGetUserMedia) {
   console.log("This appears to be Firefox");
 

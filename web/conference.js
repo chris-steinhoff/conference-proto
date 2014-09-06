@@ -1,5 +1,3 @@
-// Dependencies:
-// - https://cdn.firebase.com/js/client/1.0.21/firebase.js
 "use strict";
 
 /**
@@ -21,11 +19,15 @@
  * This is a no-opt class that should be extended.
  * @class
  */
-function SignalChannel() {}
+function SignalChannel() {
+	Log.enter("SignalChannel()");
+}
 /**
  * @param {!PeerListener} peerListener
  */
-SignalChannel.prototype.setPeerListener = function(peerListener) {};
+SignalChannel.prototype.setPeerListener = function(peerListener) {
+	Log.enter("SignalChannel.setPeerListener(peerListener)", {"peerListener":peerListener});
+};
 /*
  * @returns {!Peer[]}
  */
@@ -33,7 +35,9 @@ SignalChannel.prototype.setPeerListener = function(peerListener) {};
 /**
  * @param {!RoomListener} roomListener
  */
-SignalChannel.prototype.setRoomListener = function(roomListener) {};
+SignalChannel.prototype.setRoomListener = function(roomListener) {
+	Log.enter("SignalChannel.setRoomListener(roomListener)", {"roomListener":roomListener});
+};
 /**
  * @returns {!Room[]}
  */
@@ -42,131 +46,184 @@ SignalChannel.prototype.setRoomListener = function(roomListener) {};
  * @param {!string} roomName
  * @returns {!Room}
  */
-SignalChannel.prototype.createRoom = function(roomName) { return {}; };
+SignalChannel.prototype.createRoom = function(roomName) {
+	Log.enter("SignalChannel.createRoom(roomName)", {"roomName":roomName});
+	return {};
+};
 /**
  * @param {!string} roomId
  */
-SignalChannel.prototype.destroyRoom = function(roomId) {};
+SignalChannel.prototype.destroyRoom = function(roomId) {
+	Log.enter("SignalChannel.destroyRoom(roomId)", {"roomId":roomId});
+};
 /**
  * @param {!string} roomId
  * @param {!string} selfPeerId
  */
-SignalChannel.prototype.enterRoom = function(roomId, selfPeerId) {};
+SignalChannel.prototype.enterRoom = function(roomId, selfPeerId) {
+	Log.enter("SignalChannel.enterRoom(roomId, selfPeerId)",
+		{"roomId":roomId,"selfPeerId":selfPeerId});
+};
 /**
  * @param {!string} roomId
  */
-SignalChannel.prototype.exitRoom = function(roomId) {};
+SignalChannel.prototype.exitRoom = function(roomId) {
+	Log.enter("SignalChannel.exitRoom(roomId)", {"roomId":roomId});
+};
 /**
  * @param {!string} roomId
  * @param {!string} remotePeerId
  * @param {!string} selfPeerId
  * @param {!{type: string, sdp: Object}} rtcSessionDescription
  */
-SignalChannel.prototype.sendOffer = function(roomId, remotePeerId, selfPeerId, rtcSessionDescription) {};
+SignalChannel.prototype.sendOffer = function(roomId, remotePeerId, selfPeerId,
+                                             rtcSessionDescription) {
+	Log.enter("SignalChannel.sendOffer(roomId, remotePeerId, selfPeerId, rtcSessionDescription)",
+		{"roomId":roomId,"remotePeerId":remotePeerId,"selfPeerId":selfPeerId,
+			"rtcSessionDescription":rtcSessionDescription});
+};
 /**
  * @param {!string} roomId
  * @param {!string} remotePeerId
  * @param {!string} selfPeerId
  * @param {!{type: string, sdp: Object}} rtcSessionDescription
  */
-SignalChannel.prototype.sendAnswer = function(roomId, remotePeerId, selfPeerId, rtcSessionDescription) {};
+SignalChannel.prototype.sendAnswer = function(roomId, remotePeerId, selfPeerId,
+                                              rtcSessionDescription) {
+	Log.enter("SignalChannel.sendAnswer(roomId, remotePeerId, selfPeerId, rtcSessionDescription)",
+		{"roomId":roomId,"remotePeerId":remotePeerId,"selfPeerId":selfPeerId,
+			"rtcSessionDescription":rtcSessionDescription});
+};
 /**
  * @param {!string} roomId
  * @param {!string} selfPeerId
  * @param {!Object} iceCandidate
  */
-SignalChannel.prototype.sendIceCandidate = function(roomId, selfPeerId, iceCandidate) {};
+SignalChannel.prototype.sendIceCandidate = function(roomId, selfPeerId, iceCandidate) {
+
+};
 /**
  * @param {!string} roomId
  * @param {OccupantListener} occupantListener
  */
-SignalChannel.prototype.setOccupantListener = function(roomId, occupantListener) {};
+SignalChannel.prototype.setOccupantListener = function(roomId, occupantListener) {
+	Log.enter("SignalChannel.setOccupantListener(roomId, occupantListener)",
+		{"roomId":roomId,"occupantListener":occupantListener});
+};
 /**
  * @param {!string} roomId
  * @param {!string} selfPeerId
  * @param {RtcSessionDescriptionListener} offerListener
  */
-SignalChannel.prototype.setOfferListener = function(roomId, selfPeerId, offerListener) {};
+SignalChannel.prototype.setOfferListener = function(roomId, selfPeerId, offerListener) {
+	Log.enter("SignalChannel.setOfferListener(roomId, selfPeerId, offerListener)",
+		{"roomId":roomId,"selfPeerId":selfPeerId,"offerListener":offerListener});
+};
 /**
  * @param {!string} roomId
  * @param {!string} selfPeerId
  * @param {RtcSessionDescriptionListener} answerListener
  */
-SignalChannel.prototype.setAnswerListener = function(roomId, selfPeerId, answerListener) {};
+SignalChannel.prototype.setAnswerListener = function(roomId, selfPeerId, answerListener) {
+	Log.enter("SignalChannel.setAnswerListener(roomId, selfPeerId, answerListener)",
+		{"roomId":roomId,"selfPeerId":selfPeerId,"answerListener":answerListener});
+};
 
 /**
  * Receive events about a peer's presence.
  * This is a no-opt class that should be extended.
  * @class
  */
-function PeerListener() {}
+function PeerListener() {
+	Log.enter("PeerListener()");
+}
 /**
  * @function
  * @param {Peer} peer
  */
-PeerListener.prototype.onPeerAvailable = function(peer) {};
+PeerListener.prototype.onPeerAvailable = function(peer) {
+	Log.enter("PeerListener.onPeerAvailable(peer)", {"peer":peer});
+};
 /**
  * @function
  * @param {Peer} peer
  */
-PeerListener.prototype.onPeerUnavailable = function(peer) {};
+PeerListener.prototype.onPeerUnavailable = function(peer) {
+	Log.enter("PeerListener.onPeerUnavailable(peer)", {"peer":peer});
+};
 /**
  * @function
  * @param {Peer} peer
  */
-PeerListener.prototype.onPeerChanged = function(peer) {};
+PeerListener.prototype.onPeerChanged = function(peer) {
+	Log.enter("PeerListener.onPeerChanged(peer)", {"peer":peer});
+};
 
 /**
  * Receive events about a room's existence.
  * This is a no-opt class that should be extended.
  * @class
  */
-function RoomListener() {}
+function RoomListener() {
+	Log.enter("RoomListener()");
+}
 /**
  * @function
  * @param {Room} room
  */
-RoomListener.prototype.onRoomCreated = function(room) {};
+RoomListener.prototype.onRoomCreated = function(room) {
+	Log.enter("RoomListener.onRoomCreated(room)", {"room":room});
+};
 /**
  * @function
  * @param {Room} room
  */
-RoomListener.prototype.onRoomDestroyed = function(room) {};
+RoomListener.prototype.onRoomDestroyed = function(room) {
+	Log.enter("RoomListener.onRoomDestroyed(room)", {"room":room});
+};
 /**
  * @function
  * @param {Room} room
  */
-RoomListener.prototype.onRoomChanged = function(room) {};
+RoomListener.prototype.onRoomChanged = function(room) {
+	Log.enter("RoomListener.onRoomChanged(room)", {"room":room});
+};
 
 /**
  * Receive events about a peer's presence in a room.
  * This is a no-opt class that should be extended.
  * @class
  */
-function OccupantListener() {}
+function OccupantListener() {
+	Log.enter("OccupantListener()");
+}
 /**
  * @function
  * @param {!string} roomId The ID of the room the Peer entered.
  * @param {!string} remotePeerId The ID of the Peer who entered.
  */
-OccupantListener.prototype.onOccupantEntered = function(roomId, remotePeerId) {};
+OccupantListener.prototype.onOccupantEntered = function(roomId, remotePeerId) {
+	Log.enter("OccupantListener.onOccupantEntered(roomId, remotePeerId)",
+		{"roomId":roomId,"remotePeerId":remotePeerId});
+};
 /**
  * @function
  * @param {!string} roomId The ID of the room the Peer left.
  * @param {!string} remotePeerId The ID of the Peer who left.
  */
-OccupantListener.prototype.onOccupantExited = function(roomId, remotePeerId) {};
-
-var o = new OccupantListener();
-o.onOccupantEntered("", "");
-o.onOccupantExited("", "");
+OccupantListener.prototype.onOccupantExited = function(roomId, remotePeerId) {
+	Log.enter("OccupantListener.onOccupantExited(roomId, remotePeerId)",
+		{"roomId":roomId,"remotePeerId":remotePeerId});
+};
 
 /**
  * Receive events for incoming RTCSessionDescription offers and answers.
  * This is a no-opt class that should be extended.
  * @class
  */
-function RtcSessionDescriptionListener() {}
+function RtcSessionDescriptionListener() {
+	Log.enter("RtcSessionDescriptionListener()");
+}
 /**
  * @function
  * @param {!string} roomId
@@ -176,7 +233,12 @@ function RtcSessionDescriptionListener() {}
  * @param {!{type: string, sdp: Object}} rtcSessionDescription
  */
 RtcSessionDescriptionListener.prototype.onRtcSessionDescription =
-	function(roomId, selfPeerId, remotePeerId, iceCandidate, rtcSessionDescription) {};
+	function(roomId, selfPeerId, remotePeerId, iceCandidate, rtcSessionDescription) {
+		Log.enter("RtcSessionDescriptionListener.onRtcSessionDescription(roomId, selfPeerId," +
+			" remotePeerId, iceCandidate, rtcSessionDescription)",
+			{"roomId":roomId,"selfPeerId":selfPeerId,"remotePeerId":remotePeerId,
+				"iceCandidate":iceCandidate,"rtcSessionDescription":rtcSessionDescription});
+	};
 
 /**
  * Something that can make RTC connections to share media streams.
@@ -189,9 +251,7 @@ function Peer(id, name) {
 	this.name = name;
 }
 Peer.prototype = {
-	/** @private */
 	id: null,
-	/** @private */
 	name: null,
 	iceCandidate: null,
 	/** @returns {string} */
@@ -344,6 +404,8 @@ function Conference(signalChannel, gui, selfPeer) {
 		},
 		onOccupantEntered: {
 			value: function(roomId, remotePeerId) {
+				Log.enter("occupantListener.onOccupantEntered(roomId, remotePeerId)",
+					{"roomId":roomId,"remotePeerId":remotePeerId});
 				if(remotePeerId === selfPeerId) {
 					return;
 				}
@@ -355,17 +417,22 @@ function Conference(signalChannel, gui, selfPeer) {
 					pc.addStream(room.localMediaStreams_[i]);
 				}
 				pc.onicecandidate = function(event) {
+					// Called after PC.setLocalDescription(desc) is called.
+					Log.enter("pc.onicecandidate(event)", {"event":event});
 					if(event.candidate) {
 						selfPeerIceCandidate = event.candidate;
 						//pc.addIceCandidate(new RTCIceCandidate(event.candidate));
 					}
 				};
 				pc.onaddstream = function(event) {
+					Log.enter("pc.onaddstream(event)", {"event":event});
 					var peer = peers[remotePeerId];
 					gui.displayPeerMedia(peer, event.stream);
 				};
 				pc.createOffer(function(desc) {
+					Log.enter("pc.createOffer(desc)", {"desc":desc});
 					pc.setLocalDescription(desc);
+					Log.info("Local Description set");
 					signalChannel.sendOffer(roomId, remotePeerId, selfPeerId, desc);
 				}, onError, {
 					mandatory: {
@@ -376,7 +443,10 @@ function Conference(signalChannel, gui, selfPeer) {
 			}
 		},
 		onOccupantExited: {
-			value: function(roomId, remotePeerId) {}
+			value: function(roomId, remotePeerId) {
+				Log.enter("occupantListener.onOccupantExited(roomId, remotePeerId)",
+					{"roomId":roomId,"remotePeerId":remotePeerId});
+			}
 		}
 	});
 
