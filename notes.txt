@@ -40,9 +40,12 @@ DB
 . occupants/
 
 . . first_id/  (app-room listens here to manage occupant-list)
-. . . bob_id: true
-. . . alice_id: true
-. . . larry_id: true
+. . . auto1_id/
+. . . . peer_id: bob_id
+. . . auto2_id/
+. . . . peer_id: alice_id
+. . . auto3_id/
+. . . . peer_id: larry_id
 
 . offers/
 
@@ -86,13 +89,12 @@ DB
 
 . . first_id/
 . . . bob_id/
-. . . . id: bob_id
-. . . . iceCandidates/
+. . . . alice_id/  (bob listens(added,removed) here)
+. . . . . auto_id: {ice}  (alice pushes these)
 . . . . . auto_id: {ice}
-. . . . . auto_id: {ice}
+
 . . . alice_id/
-. . . . id: alice_id
-. . . . iceCandidates/
+. . . . bob_id/
 . . . . . auto_id: {ice}
 . . . . . auto_id: {ice}
 

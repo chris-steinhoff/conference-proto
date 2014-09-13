@@ -39,6 +39,7 @@
 <div id="auth">
 	<span>2fc1c0beb992cd7096975cfebf9d5c3b</span><br/>
 	<span>64489c85dc2fe0787b85cd87214b3810</span><br/>
+	<span>-JWBz6YpVfTFk5O2XJVD</span><br/>
 	<input id="idInput" type="text" placeholder="Enter your ID" value="2fc1c0beb992cd7096975cfebf9d5c3b"/>
 	<button id="loginButton" type="button">Login</button>
 </div>
@@ -146,7 +147,7 @@
 		var li = event.target;
 		var id = li.dataset.id;
 		var room = rooms[id];
-		console.log(room);
+		//console.log(room);
 		conference.enterRoom(id);
 	}
 
@@ -178,7 +179,7 @@
 		}
 	});
 	MyGui.prototype.addPeerToList = function(peer) {
-		console.log(peer);
+		//console.log(peer);
 		var liStr = MyGui.prototype.peerTmpl
 				.replace("{{peerId}}", peer.getId())
 				.replace("{{peerName}}", peer.getName());
@@ -187,7 +188,7 @@
 		nav_peers.appendChild(ul.firstChild);
 	};
 	MyGui.prototype.addRoomToList = function(room) {
-		console.log(room);
+		//console.log(room);
 		rooms[room.id] = room;
 		var liStr = MyGui.prototype.roomTmpl
 				.replace("{{roomId}}", room.id)

@@ -23,22 +23,22 @@ function SignalChannel() {
 	Log.enter("SignalChannel()");
 }
 /**
- * @param {!PeerListener} peerListener
+ * @param {!PeerListListener} peerListListener
  */
-SignalChannel.prototype.setPeerListener = function(peerListener) {
-	Log.enter("SignalChannel.setPeerListener(peerListener)", {"peerListener":peerListener});
+SignalChannel.prototype.setPeerListListener = function(peerListListener) {
+	Log.enter("SignalChannel.setPeerListListener(peerListListener)", {"peerListListener":peerListListener});
 };
 /*
  * @returns {!Peer[]}
  */
 //SignalChannel.prototype.fetchPeers = function() { return []; };
 /**
- * @param {!RoomListener} roomListener
+ * @param {!RoomListListener} roomListListener
  */
-SignalChannel.prototype.setRoomListener = function(roomListener) {
-	Log.enter("SignalChannel.setRoomListener(roomListener)", {"roomListener":roomListener});
+SignalChannel.prototype.setRoomListListener = function(roomListListener) {
+	Log.enter("SignalChannel.setRoomListListener(roomListListener)", {"roomListListener":roomListListener});
 };
-/**
+/*
  * @returns {!Room[]}
  */
 //SignalChannel.prototype.fetchRooms = function() { return []; };
@@ -59,10 +59,11 @@ SignalChannel.prototype.destroyRoom = function(roomId) {
 /**
  * @param {!string} roomId
  * @param {!string} selfPeerId
+ * @param {!RoomListener} roomListener
  */
-SignalChannel.prototype.enterRoom = function(roomId, selfPeerId) {
-	Log.enter("SignalChannel.enterRoom(roomId, selfPeerId)",
-		{"roomId":roomId,"selfPeerId":selfPeerId});
+SignalChannel.prototype.enterRoom = function(roomId, selfPeerId, roomListener) {
+	Log.enter("SignalChannel.enterRoom(roomId, selfPeerId, roomListener)",
+		{"roomId":roomId,"selfPeerId":selfPeerId,"roomListener":roomListener});
 };
 /**
  * @param {!string} roomId
@@ -74,59 +75,137 @@ SignalChannel.prototype.exitRoom = function(roomId) {
  * @param {!string} roomId
  * @param {!string} remotePeerId
  * @param {!string} selfPeerId
- * @param {!{type: string, sdp: Object}} rtcSessionDescription
+ * @param {!{type: string, sdp: Object}} sessionDescription
+ * @param {!IceCandidateListener} iceCandidateListener
  */
 SignalChannel.prototype.sendOffer = function(roomId, remotePeerId, selfPeerId,
-                                             rtcSessionDescription) {
-	Log.enter("SignalChannel.sendOffer(roomId, remotePeerId, selfPeerId, rtcSessionDescription)",
+                                             sessionDescription, iceCandidateListener) {
+	Log.enter("SignalChannel.sendOffer(roomId, remotePeerId, selfPeerId," +
+		" sessionDescription, iceCandidateListener)",
 		{"roomId":roomId,"remotePeerId":remotePeerId,"selfPeerId":selfPeerId,
-			"rtcSessionDescription":rtcSessionDescription});
+			"sessionDescription":sessionDescription,
+			"iceCandidateListener":iceCandidateListener});
 };
 /**
  * @param {!string} roomId
  * @param {!string} remotePeerId
  * @param {!string} selfPeerId
- * @param {!{type: string, sdp: Object}} rtcSessionDescription
+ * @param {!{type: string, sdp: Object}} sessionDescription
+ * @param {!IceCandidateListener} iceCandidateListener
  */
 SignalChannel.prototype.sendAnswer = function(roomId, remotePeerId, selfPeerId,
-                                              rtcSessionDescription) {
-	Log.enter("SignalChannel.sendAnswer(roomId, remotePeerId, selfPeerId, rtcSessionDescription)",
+                                              sessionDescription, iceCandidateListener) {
+	Log.enter("SignalChannel.sendAnswer(roomId, remotePeerId, selfPeerId," +
+		" sessionDescription, iceCandidateListener)",
 		{"roomId":roomId,"remotePeerId":remotePeerId,"selfPeerId":selfPeerId,
-			"rtcSessionDescription":rtcSessionDescription});
+			"sessionDescription":sessionDescription,
+			"iceCandidateListener":iceCandidateListener});
 };
 /**
  * @param {!string} roomId
+ * @param {!string} remotePeerId
  * @param {!string} selfPeerId
  * @param {!Object} iceCandidate
  */
-SignalChannel.prototype.sendIceCandidate = function(roomId, selfPeerId, iceCandidate) {
-
+SignalChannel.prototype.sendIceCandidate = function(roomId, remotePeerId, selfPeerId,
+                                                    iceCandidate) {
+	Log.enter("SignalChannel.sendAnswer(roomId, remotePeerId, selfPeerId," +
+		" iceCandidate)",
+		{"roomId":roomId,"remotePeerId":remotePeerId,"selfPeerId":selfPeerId,
+			"iceCandidate":iceCandidate});
 };
-/**
+/*
  * @param {!string} roomId
  * @param {OccupantListener} occupantListener
  */
-SignalChannel.prototype.setOccupantListener = function(roomId, occupantListener) {
+/*SignalChannel.prototype.setOccupantListener = function(roomId, occupantListener) {
 	Log.enter("SignalChannel.setOccupantListener(roomId, occupantListener)",
 		{"roomId":roomId,"occupantListener":occupantListener});
-};
-/**
+};*/
+/*
  * @param {!string} roomId
  * @param {!string} selfPeerId
  * @param {RtcSessionDescriptionListener} offerListener
  */
-SignalChannel.prototype.setOfferListener = function(roomId, selfPeerId, offerListener) {
+/*SignalChannel.prototype.setOfferListener = function(roomId, selfPeerId, offerListener) {
 	Log.enter("SignalChannel.setOfferListener(roomId, selfPeerId, offerListener)",
 		{"roomId":roomId,"selfPeerId":selfPeerId,"offerListener":offerListener});
-};
-/**
+};*/
+/*
  * @param {!string} roomId
  * @param {!string} selfPeerId
  * @param {RtcSessionDescriptionListener} answerListener
  */
-SignalChannel.prototype.setAnswerListener = function(roomId, selfPeerId, answerListener) {
+/*SignalChannel.prototype.setAnswerListener = function(roomId, selfPeerId, answerListener) {
 	Log.enter("SignalChannel.setAnswerListener(roomId, selfPeerId, answerListener)",
 		{"roomId":roomId,"selfPeerId":selfPeerId,"answerListener":answerListener});
+};*/
+
+/**
+ * @class
+ */
+function RoomListener() {
+	Log.enter("RoomListener()");
+}
+RoomListener.prototype = {
+	/**
+	 * @function
+	 * @param {!String} roomId
+	 * @param {!String} remotePeerId
+	 */
+	onOccupantEntered: function(roomId, remotePeerId) {
+		Log.enter("RoomListener.onOccupantEntered(roomId, remotePeerId)",
+			{"roomId":roomId,"remotePeerId":remotePeerId})
+	},
+	/**
+	 * @function
+	 * @param {!String} roomId
+	 * @param {!String} remotePeerId
+	 */
+	onOccupantExited: function(roomId, remotePeerId) {
+		Log.enter("RoomListener.onOccupantExited(roomId, remotePeerId)",
+			{"roomId":roomId,"remotePeerId":remotePeerId})
+	},
+
+	onOfferReceived: function(roomId, selfPeerId, remotePeerId, sessionDescription) {
+		Log.enter("RoomListener.onOfferReceived(roomId, selfPeerId, remotePeerId, " +
+			"sessionDescription)",
+			{"roomId":roomId,"selfPeerId":selfPeerId,"remotePeerId":remotePeerId,
+				"sessionDescription":sessionDescription});
+	},
+
+	onAnswerReceived: function(roomId, selfPeerId, remotePeerId, sessionDescription) {
+		Log.enter("RoomListener.onAnswerReceived(roomId, selfPeerId, remotePeerId, " +
+			"sessionDescription)",
+			{"roomId":roomId,"selfPeerId":selfPeerId,"remotePeerId":remotePeerId,
+				"sessionDescription":sessionDescription});
+	}
+};
+
+/**
+ * @class
+ * @param {!Object} peerConnection
+ */
+function IceCandidateListener(peerConnection) {
+	Log.enter("IceCandidateListener()");
+	this.peerConnection = peerConnection;
+}
+IceCandidateListener.prototype = {
+	/**
+	 * @function
+	 * @param {!String} roomId
+	 * @param {!String} remotePeerId
+	 * @param {!String} selfPeerId
+	 * @param {!Object} iceCandidate
+	 */
+	onIceCandidateReceived: function(roomId, selfPeerId, remotePeerId, iceCandidate) {
+		Log.enter("IceCandidateListener.onIceCandidateReceived(roomId, selfPeerId," +
+			" remotePeerId, iceCandidate)",
+			{"roomId":roomId,"selfPeerId":selfPeerId,"remotePeerId":remotePeerId,
+				"iceCandidate":iceCandidate});
+
+		this.peerConnection.addIceCandidate(iceCandidate);
+	}
 };
 
 /**
@@ -134,29 +213,29 @@ SignalChannel.prototype.setAnswerListener = function(roomId, selfPeerId, answerL
  * This is a no-opt class that should be extended.
  * @class
  */
-function PeerListener() {
-	Log.enter("PeerListener()");
+function PeerListListener() {
+	Log.enter("PeerListListener()");
 }
 /**
  * @function
  * @param {Peer} peer
  */
-PeerListener.prototype.onPeerAvailable = function(peer) {
-	Log.enter("PeerListener.onPeerAvailable(peer)", {"peer":peer});
+PeerListListener.prototype.onPeerAvailable = function(peer) {
+	Log.enter("PeerListListener.onPeerAvailable(peer)", {"peer":peer});
 };
 /**
  * @function
  * @param {Peer} peer
  */
-PeerListener.prototype.onPeerUnavailable = function(peer) {
-	Log.enter("PeerListener.onPeerUnavailable(peer)", {"peer":peer});
+PeerListListener.prototype.onPeerUnavailable = function(peer) {
+	Log.enter("PeerListListener.onPeerUnavailable(peer)", {"peer":peer});
 };
 /**
  * @function
  * @param {Peer} peer
  */
-PeerListener.prototype.onPeerChanged = function(peer) {
-	Log.enter("PeerListener.onPeerChanged(peer)", {"peer":peer});
+PeerListListener.prototype.onPeerChanged = function(peer) {
+	Log.enter("PeerListListener.onPeerChanged(peer)", {"peer":peer});
 };
 
 /**
@@ -164,29 +243,29 @@ PeerListener.prototype.onPeerChanged = function(peer) {
  * This is a no-opt class that should be extended.
  * @class
  */
-function RoomListener() {
-	Log.enter("RoomListener()");
+function RoomListListener() {
+	Log.enter("RoomListListener()");
 }
 /**
  * @function
  * @param {Room} room
  */
-RoomListener.prototype.onRoomCreated = function(room) {
-	Log.enter("RoomListener.onRoomCreated(room)", {"room":room});
+RoomListListener.prototype.onRoomCreated = function(room) {
+	Log.enter("RoomListListener.onRoomCreated(room)", {"room":room});
 };
 /**
  * @function
  * @param {Room} room
  */
-RoomListener.prototype.onRoomDestroyed = function(room) {
-	Log.enter("RoomListener.onRoomDestroyed(room)", {"room":room});
+RoomListListener.prototype.onRoomDestroyed = function(room) {
+	Log.enter("RoomListListener.onRoomDestroyed(room)", {"room":room});
 };
 /**
  * @function
  * @param {Room} room
  */
-RoomListener.prototype.onRoomChanged = function(room) {
-	Log.enter("RoomListener.onRoomChanged(room)", {"room":room});
+RoomListListener.prototype.onRoomChanged = function(room) {
+	Log.enter("RoomListListener.onRoomChanged(room)", {"room":room});
 };
 
 /**
@@ -230,14 +309,14 @@ function RtcSessionDescriptionListener() {
  * @param {!string} remotePeerId
  * @param {!string} selfPeerId
  * @param {!Object} iceCandidate
- * @param {!{type: string, sdp: Object}} rtcSessionDescription
+ * @param {!{type: string, sdp: Object}} sessionDescription
  */
 RtcSessionDescriptionListener.prototype.onRtcSessionDescription =
-	function(roomId, selfPeerId, remotePeerId, iceCandidate, rtcSessionDescription) {
+	function(roomId, selfPeerId, remotePeerId, iceCandidate, sessionDescription) {
 		Log.enter("RtcSessionDescriptionListener.onRtcSessionDescription(roomId, selfPeerId," +
-			" remotePeerId, iceCandidate, rtcSessionDescription)",
+			" remotePeerId, iceCandidate, sessionDescription)",
 			{"roomId":roomId,"selfPeerId":selfPeerId,"remotePeerId":remotePeerId,
-				"iceCandidate":iceCandidate,"rtcSessionDescription":rtcSessionDescription});
+				"iceCandidate":iceCandidate,"sessionDescription":sessionDescription});
 	};
 
 /**
@@ -251,7 +330,9 @@ function Peer(id, name) {
 	this.name = name;
 }
 Peer.prototype = {
+	/** @type {String} */
 	id: null,
+	/** @type {String} */
 	name: null,
 	iceCandidate: null,
 	/** @returns {string} */
@@ -263,6 +344,18 @@ Peer.prototype = {
 		return this.name;
 	}
 };
+
+/**
+ * @class
+ * @param {!string} roomId
+ * @param {!string} occupantId
+ * @param {!string} peerId
+ */
+function Occupant(roomId, occupantId, peerId) {
+	this.roomId = roomId;
+	this.occupantId = occupantId;
+	this.peerId = peerId;
+}
 
 /**
  * A group of Peers, all sharing media streams with each other.
@@ -277,8 +370,11 @@ function Room(id, name, signalChannel) {
 	this.signalChannel_ = signalChannel;
 }
 Room.prototype = {
+	/** @type {String} */
 	id_: null,
+	/** @type {String} */
 	name_: null,
+	/** @type {!SignalChannel} */
 	signalChannel_: null,
 	localMediaStreams_: [],
 	get id() { return this.id_; }, set id(readonly) {},
@@ -286,28 +382,27 @@ Room.prototype = {
 	get signalChannel() { return this.signalChannel_; }, set signalChannel(readonly) {}
 };
 Room.prototype.enter = function() {
-
 };
 
 var r = new Room("", "", new SignalChannel());
 r.id = "";
 
-function RoomListenerImpl(gui) {
+function RoomListListenerImpl(gui) {
 	if(!this) {
-		return new RoomListenerImpl(gui);
+		return new RoomListListenerImpl(gui);
 	}
-	RoomListener.call(this);
+	RoomListListener.call(this);
 	this.gui_ = gui;
 }
-RoomListenerImpl.prototype = Object.create(RoomListener.prototype, {
+RoomListListenerImpl.prototype = Object.create(RoomListListener.prototype, {
 	constructor: {
-		value: RoomListenerImpl
+		value: RoomListListenerImpl
 	}/*,
 	gui_: {
 		value: null
 	}*/
 });
-RoomListenerImpl.prototype.onRoomCreated = function(room) {
+RoomListListenerImpl.prototype.onRoomCreated = function(room) {
 
 };
 
@@ -347,7 +442,7 @@ function Conference(signalChannel, gui, selfPeer) {
 	var video = false;
 
 	var peers = {};
-	var peerListener = Object.create(PeerListener.prototype, {
+	var peerListListener = Object.create(PeerListListener.prototype, {
 		constructor: {
 			value: function() {}
 		},
@@ -366,10 +461,10 @@ function Conference(signalChannel, gui, selfPeer) {
 			}
 		}
 	});
-	signalChannel.setPeerListener(peerListener);
+	signalChannel.setPeerListListener(peerListListener);
 
 	var rooms = {};
-	var roomListener = Object.create(RoomListener.prototype, {
+	var roomListListener = Object.create(RoomListListener.prototype, {
 		constructor: {
 			value: function() {}
 		},
@@ -388,16 +483,13 @@ function Conference(signalChannel, gui, selfPeer) {
 			}
 		}
 	});
-	signalChannel.setRoomListener(roomListener);
+	signalChannel.setRoomListListener(roomListListener);
 
-	var answerListener = Object.create(RtcSessionDescriptionListener.prototype);
+	/*var answerListener = Object.create(RtcSessionDescriptionListener.prototype);
 
-	var offerListener = Object.create(RtcSessionDescriptionListener.prototype);
+	var offerListener = Object.create(RtcSessionDescriptionListener.prototype);*/
 
-	var occupantListener = Object.create(OccupantListener.prototype, {
-		/*constructor: {
-			value: function() {}
-		},*/
+	/*var occupantListener = Object.create(OccupantListener.prototype, {
 		peerConnection: {
 			value: null,
 			writable: true
@@ -448,7 +540,7 @@ function Conference(signalChannel, gui, selfPeer) {
 					{"roomId":roomId,"remotePeerId":remotePeerId});
 			}
 		}
-	});
+	});*/
 
 	return {
 		/**
@@ -489,15 +581,115 @@ function Conference(signalChannel, gui, selfPeer) {
 				throw new Error("A room does not exist with the supplied id");
 			}
 
+			var roomListener = Object.create(RoomListener.prototype, {
+				onOccupantEntered: {
+					value: function(roomId, remotePeerId) {
+						Log.enter("roomListener.onOccupantEntered(roomId, remotePeerId)",
+							{"roomId":roomId,"remotePeerId":remotePeerId});
+
+						var pc = new RTCPeerConnection(null);
+						this.peerConnection = pc;
+						var room = rooms[roomId];
+						for(var i = 0 ; i < room.localMediaStreams_.length ; i++) {
+							pc.addStream(room.localMediaStreams_[i]);
+						}
+						pc.onicecandidate = function(event) {
+							// Called after PC.setLocalDescription(desc) is called.
+							Log.enter("pc.onicecandidate(event)",
+								{"event.candidate":event.candidate});
+							if(event.candidate) {
+								var iceCandidate = event.candidate;
+								signalChannel.sendIceCandidate(roomId, remotePeerId,
+									selfPeerId, iceCandidate);
+							}
+						};
+						pc.onaddstream = function(event) {
+							Log.enter("pc.onaddstream(event)", {"event.stream":event.stream});
+							var peer = peers[remotePeerId];
+							gui.displayPeerMedia(peer, event.stream);
+						};
+						pc.createOffer(function(desc) {
+							Log.enter("pc.createOffer(desc)", {"desc":desc});
+							pc.setLocalDescription(desc);
+							Log.info("Local Description set");
+							signalChannel.sendOffer(roomId, remotePeerId, selfPeerId,
+								desc, new IceCandidateListener(pc));
+						}, onError, {
+							mandatory: {
+								OfferToReceiveAudio: true,
+								OfferToReceiveVideo: true
+							}
+						});
+					}
+				}/*,
+				onOccupantExited: {
+					value: function(roomId, remotePeerId) {
+						Log.enter("roomListener.onOccupantExited(roomId, remotePeerId)",
+							{"roomId":roomId,"remotePeerId":remotePeerId});
+					}
+				}*/,
+				onOfferReceived: {
+					value: function(roomId, selfPeerId, remotePeerId, sessionDescription) {
+						Log.enter("roomListener.onOfferReceived(roomId, selfPeerId, " +
+							"remotePeerId, sessionDescription)",
+							{"roomId":roomId,"selfPeerId":selfPeerId,"remotePeerId":remotePeerId,
+								"sessionDescription":sessionDescription});
+
+						var pc = new RTCPeerConnection(null);
+						var room = rooms[roomId];
+						for(var i = 0 ; i < room.localMediaStreams_.length ; i++) {
+							pc.addStream(room.localMediaStreams_[i]);
+						}
+						pc.onicecandidate = function(event) {
+							Log.enter("pc.onicecandidate(event)",
+								{"event.candidate":event.candidate});
+							if(event.candidate) {
+								var iceCandidate = event.candidate;
+								signalChannel.sendIceCandidate(roomId, remotePeerId,
+									selfPeerId, iceCandidate);
+							}
+						};
+						pc.onaddstream = function(event) {
+							Log.enter("pc.onaddstream(event)", {"event.stream":event.stream});
+							var peer = peers[remotePeerId];
+							gui.displayPeerMedia(peer, event.stream);
+						};
+						pc.setRemoteDescription(sessionDescription);
+						pc.createAnswer(function(desc) {
+							Log.enter("pc.createAnswer(desc)", {"desc":desc});
+							pc.setLocalDescription(desc);
+							signalChannel.sendAnswer(roomId, remotePeerId, selfPeerId,
+								desc, new IceCandidateListener(pc));
+						}, onError, {
+							mandatory: {
+								OfferToReceiveAudio: true,
+								OfferToReceiveVideo: true
+							}
+						})
+					}
+				},
+				onAnswerReceived: {
+					value: function(roomId, selfPeerId, remotePeerId, sessionDescription) {
+						Log.enter("roomListener.onAnswerReceived(roomId, selfPeerId, " +
+							"remotePeerId, sessionDescription)",
+							{"roomId":roomId,"selfPeerId":selfPeerId,"remotePeerId":remotePeerId,
+								"sessionDescription":sessionDescription});
+
+					}
+				}
+			});
+
+			signalChannel.enterRoom(roomId, selfPeerId, roomListener);
+
 			var userMediaListener = Object.create(Gui.prototype.UserMediaListener.prototype, {
 				onUserMedia: {
 					value: function(media) {
 						room.localMediaStreams_.push(media);
 						gui.displayLocalMedia(media);
-						signalChannel.setAnswerListener(roomId, selfPeerId, answerListener);
+						/*signalChannel.setAnswerListener(roomId, selfPeerId, answerListener);
 						signalChannel.setOfferListener(roomId, selfPeerId, offerListener);
 						signalChannel.setOccupantListener(roomId, occupantListener);
-						signalChannel.enterRoom(roomId, selfPeerId);
+						signalChannel.enterRoom(roomId, selfPeerId);*/
 					}
 				},
 				onError: {
@@ -527,7 +719,7 @@ destroyRoom(name : String)
 enterRoom(roomId : String, selfPeerId : String)
 exitRoom(roomId : String, selfPeerId : String)
 sendOffer(roomId : String, remotePeerId : String, selfPeerId : String,
-          rtcSessionDescription : RTCSessionDescription)
+          sessionDescription : RTCSessionDescription)
 setOccupantListener(roomId : String, listener : OccupantListener)
 setOfferListener(roomId : String, selfPeerId : String,
                  offerListener : RtcSessionDescriptionListener)
@@ -544,7 +736,7 @@ onOccupantExited(roomId : String, remotePeerId : String)
 RtcSessionDescriptionListener
 ----------------
 onRtcSessionDescription(roomId : String, remotePeerId : String, selfPeerId : String,
-                        rtcSessionDescription : RTCSessionDescription)
+                        sessionDescription : RTCSessionDescription)
 
 ----
 Peer
